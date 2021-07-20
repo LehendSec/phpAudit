@@ -1,0 +1,99 @@
+asp  acess/sql server/oracle
+php  mysql/postgresql/oracle
+aspx acess/sql server /oracle
+jsp  oracle/mysql/sqlserver
+
+postgresql 一般国外的站使用的postgresql
+一般注入用户表或者管理员表
+exec="select * from news where id="& request.QueryString("id")  才用的是request接收数据 
+		一般asp站点都是request接收数据
+		前端可以接收的请求有get、post、cookie
+		.mdb打开工具 在数据管理模块
+		注意:网站搭建好了以后 只要是使用了/ 、and 1=2这种返回为假或者执行出错的都直接报500服务器错误，不会显示页面，是什么问题呢？
+		按理说不应该是报数据库错误吗？
+		就算开启了 将错误信息发送到浏览器 ，只有在虚拟机浏览器访问才会显示具体错误，如果在本地访问不会显示具体错误，都用500显示
+		也就是说，真实网站很有可能在进行实战的时候就只给你返回500(iis7.5 及其以上的应该是这样) 
+		
+		and 1=1 和and 1=2 一般来说只要两次执行返回的页面不同，就存在sql注入
+/(是否报错) -0 '(字符型).0 .1(如果进行数据类型转化、强制类型转换 就没有sql注入)  检测数字型注入 检测有没有将参数带入到sql语句中执行 (就是检测是否存在注入)
+.0、.1、*、/(是否报错) -0 '：目的:为了过掉waf进行检测是否存在sql注入 云锁拦截order by 不拦截and 1=1
+id=1/ id=1.0 id=1.1 id=1*1 id=1-0
+多参数的情况下 每个参数都要检测 
+sql注入探测
+		url参数位置
+		post提交
+		登录
+		留言
+		搜索框
+		复选框 省、市 性别 这种抓包分析(拼接参数) post提交
+
+根据报错信息百度 确定数据库类型
+eg:
+	Microsoft OLE DB Provider for ODBC Drivers ???? '80040e21'
+	/NewsMore.asp???? 37 
+也可以使用sqlmap 检测数据库 类型
+
+常见表名称
+admin
+admin_user
+admin_name
+manager
+manager_name
+manager_username
+admin_username
+存放管理员名称的列
+存放管理员密码的列
+
+可以在前端查询(可能字段是相同的)
+
+注意:有注入的页面不一定能用order by跑出来,不能跑出来就换页面(可能过滤了order by或者后台代码的问题)
+
+select 1,2,3,4,5,6,7,8 from xx 回显的原理是什么? 
+		http://192.168.149.130:81/about.asp?id=2 union select 1,2,3,4,5,6 from admin
+		本来页面默认查询的参数为整数，但是我们使用union联合查询时里面的字段有不是数字类型的(字符类型)，就会显示出来
+union select 1,2,3,4,5,6 from admin 一个一个字段爆
+为什么使用select 1,2,3,4,5,6 而不用select1,1,1,1,1,1,1,1,1?
+		为了爆出字符列显示，其实使用select1,1,1,1,1,1,1,1,1也是可以的，但是很难判断回显的字符是第几个字段，不方便进行后面的爆字段 操作
+		SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL FROM apply 适用所有数据库
+		可以使用SELECT NULL,NULL,NULL,NULL,NULL,NULL,NULL FROM apply结合SELECT 1,NULL,NULL,NULL,NULL,NULL,NULL FROM apply来进行爆
+有时候没有回显应该如何处理? 就是让默认的执行条件报错
+		http://192.168.149.130:81/about.asp?id=2 union select 1,password,3,admin,5,6 from admin
+		加一个and 1=2
+		http://192.168.149.130:81/about.asp?id=2 and 1=2 union select 1,password,3,admin,5,6 from admin
+		加-
+		http://192.168.149.130:81/about.asp?id=-2 union select 1,password,3,admin,5,6 from admin
+
+.mdb文件打开工具在 数据管理模块里面
+
+
+acess数据库 基本上就下面两种
+1、bool盲注
+2、union联合
+acess数据库基本全靠字典 想要强大的话就给他一个强大的字典
+sqlmap 主流
+穿山甲(跑跑acess) 虚拟机运行 windows10可能有问题 将穿山甲字典拿出来放到sqlmap中 去重复
+
+acess 偏移注入原理是什么？尚未理解
+
+垮裤查询 --前提有读取权限 
+	已经得到了数据库物理路径	C:\web\shop7z\data\#shop7z.asp 
+	iis7.5 但是即使你找到mdb的具体路径 也不允许你下载(很有可能会把mdb后缀改为.asp或者其他)
+	情景:
+		我们攻击的服务器上面有多个站点，但是我们获得了a站的数据库物理路径	C:\web\asp\xydata\xycms.mdb
+		我可通过其他站点存在的注入漏洞进行跨库查询  -感觉像是旁站攻击
+
+
+
+空格代替 ++ %0a
+acess 不能用内联注释  之前讲的都是用于acess数据库的
+
+注意：以上都是acess数据库的处理方式
+
+mysql sql注入的类型:
+		1、bool盲注
+		2、延迟注入
+		3、报错注入
+		4、多语句查询 一般存在于sql server
+		5、union
+		5、内联查询
+

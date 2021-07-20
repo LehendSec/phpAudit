@@ -1,0 +1,12 @@
+sql注入
+1、原理：对用户的输入的参数未做过滤导致打破原先sql语句逻辑，攻击者利用此执行任意sql语句
+2、
+3、绕过：注释绕过(# --  ; /* */) 、大小写绕过、内联注释绕过(/*!*/)、双写绕过
+	、编码绕过(16进制、ascii（char函数）)、空格过滤绕过(使用/**/、()、%0a回车、tab、多个空格)
+	、过滤or and xor not绕过(使用&& %26、%26 || | !替代)、过滤等号绕过(使用like、rlike、regexp、大小写达到等号效果
+	、!<>替代)、过滤大小写绕过(greatest(n,m)返回参数中的最大值、least返回最小值、strcmp、in between关键字)
+	、过滤引号绕过(16进制、宽字节%aa%27)、过滤逗号绕过("string" from 1 for 6、join offset关键字)
+4、防御：转义、预编译、限制关键字输入以及长度等
+5、相关函数：报错函数--floor、exp、updatexml、extractvalue  延时函数--sleep、benchmark  
+	常用函数--mid(columnName,start,len)、limit、concat拼接字符串、group_concat、count、substr、left、ord
+6、数据库判断：特征表(information_schema)、连接符、返回的错误类型(you have an error in your SQL syntax)
